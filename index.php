@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <title id='Description'>Bitcoin Indonesia</title>
-    <link rel="stylesheet" href="https://www.jqwidgets.com/jquery-widgets-demo/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="style_light.css" type="text/css" />
+	<link rel="stylesheet alternate" href="style_light.css" id="l" title="l">
+	<link rel="stylesheet alternate" href="style_dark.css" id="d" title="d">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1 minimum-scale=1" />	
     <script type="text/javascript" src="https://www.jqwidgets.com/jquery-widgets-demo/scripts/jquery-1.11.1.min.js"></script>
@@ -15,14 +17,21 @@
     <script type="text/javascript" src="https://www.jqwidgets.com/jquery-widgets-demo/jqwidgets/jqxgrid.selection.js"></script>
     <script type="text/javascript" src="https://www.jqwidgets.com/jquery-widgets-demo/jqwidgets/jqxtabs.js"></script>
     <script type="text/javascript" src="https://www.jqwidgets.com/jquery-widgets-demo/scripts/demos.js"></script>
-</style>
+	<script>
+		function setStyleSheet(url){
+			var stylesheet = document.getElementById("stylesheet");
+			stylesheet.setAttribute('href', url);
+		}
+	</script>
 </head>
 <body class='default'>
     <script type="text/javascript">
+	var th=1;
     var url = "<?php echo $url?>";
-    $(document).ready(function () {
+    $(document).ready(function() {
         showDataBtc();
         showDataIdr();
+		setTimers(30);
     });
     
     function showDataBtc(){
@@ -38,15 +47,15 @@
                 
             ],
             id: 'id',
-            url: "curlBtc.php",
+            url: "curl.php?type=btc",
             cache:false
         };
         var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
                 if (value < 0) {
-                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;">' + (columnfield=='change_persen'?Math.abs(value): Math.abs(value).toFixed(8)) + (columnfield=='change_persen'?'%':' BTC') + '</span>';
+                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: '+(th?'#ff0000':'#ff9999')+';">' + (columnfield=='change_persen'?Math.abs(value): Math.abs(value).toFixed(8)) + (columnfield=='change_persen'?'%':' BTC') + '</span>';
                 }
                 else {
-                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: #008000;">' + value + (columnfield=='change_persen'?'%':' BTC') + '</span>';
+                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: '+(th?'#008000':'#75ff75')+';">' + value + (columnfield=='change_persen'?'%':' BTC') + '</span>';
                 }
             }
         var cellsrendererPrices = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
@@ -98,15 +107,15 @@
                 
             ],
             id: 'market',
-            url: "curlIdr.php",
+            url: "curl.php?type=idr",
             cache:false
         };
         var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
                 if (value < 0) {
-                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;">' + (columnfield=='change_persen'?(value*-1): formatNum(value*-1))  + (columnfield=='change_persen'?'%':' IDR') + '</span>';
+                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: '+(th?'#ff0000':'#ff9999')+';">' + (columnfield=='change_persen'?(value*-1): formatNum(value*-1))  + (columnfield=='change_persen'?'%':' IDR') + '</span>';
                 }
                 else {
-                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: #008000;">' + (columnfield=='change_persen'?value:formatNum(value))  + (columnfield=='change_persen'?'%':' IDR') + '</span>';
+                    return '<span style="margin-top: 6px; margin-right: 4px; float: ' + columnproperties.cellsalign + '; color: '+(th?'#008000':'#75ff75')+';">' + (columnfield=='change_persen'?value:formatNum(value))  + (columnfield=='change_persen'?'%':' IDR') + '</span>';
                 }
             }
         var cellsrendererPrices = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
@@ -171,17 +180,43 @@
         $("#jqxgridIdr").jqxGrid('updatebounddata', 'refresh');
     }
 
-    setInterval(function(){ 
-        showClearIdr();
-        showClearBtc();
-    }, (6000) );
-    
+	function switchTheme(d) {
+		th = d;
+		document.getElementById('d').disabled = d;
+		document.getElementById('l').disabled = !d;
+		showClearIdr();
+		showClearBtc();
+	}
+
+	var updateWindow;
+	function setTimers(i) {
+		var j = i;
+		clearInterval(updateWindow);
+		updateWindow = setInterval(function() {
+			if (j) {
+				j--;
+			} else {
+				showClearIdr();
+				showClearBtc();
+				j = i;
+			}
+			document.getElementById("t").innerHTML = "Updates every "+i+" seconds ("+j+")";
+		}, 1000);
+	}
 </script>
     <table>
         <tr>
-            <td valign="top"><div id="jqxgridBtc"></div></td>
-            <td valign="top"><div id="jqxgridIdr"></div></td>
+            <td valign="top" ><div id="jqxgridBtc"></div></td>
+            <td valign="top" ><div id="jqxgridIdr"></div></td>
         </tr>
     </table>
+	<div class="tt"><font id="t"></font><br>
+	<input type="button" onclick="setTimers(10);" value="10">
+	<input type="button" onclick="setTimers(30);" value="30">
+	<input type="button" onclick="setTimers(60);" value="60">
+	<input type="button" onclick="setTimers(120);" value="120">
+	<input type="button" onclick="setTimers(300);" value="300"><br>
+	Theme: <a onclick="switchTheme(1);" href="#">Light</a> vs <a onclick="switchTheme(0);" href="#">Dark</a>
+	</div>
 </body>
 </html>
