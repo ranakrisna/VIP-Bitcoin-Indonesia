@@ -1,9 +1,11 @@
 <?php 
+error_reporting(0);
 $data=["btcidr", "bchidr", "btgidr", "ethidr", "etcidr", "ignisidr", "ltcidr", "nxtidr", "tenidr", "wavesidr", "stridr", "xrpidr", "xzcidr"];
 $ch=curl_init("https://api2.bitcoin.co.id/api/webdata/");
 curl_setopt($ch, CURLOPT_NOBODY, false);
 curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $response = curl_exec($ch);
 if($response){

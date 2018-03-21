@@ -1,9 +1,11 @@
 <?php 
-$data=["btsbtc", "drkbtc", "dogebtc", "ethbtc", "ltcbtc", "nxtbtc", "strbtc", "nembtc", "xrpbtc"];
+error_reporting(0);
+$data=["btsbtc", "drkbtc", "dogebtc", "ethbtc", "ltcbtc", "nxtbtc", "tenbtc", "strbtc", "nembtc", "xrpbtc"];
 $ch=curl_init("https://api2.bitcoin.co.id/api/webdata/");
 curl_setopt($ch, CURLOPT_NOBODY, false);
 curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $response = curl_exec($ch);
 if($response){

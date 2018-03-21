@@ -19,7 +19,6 @@
 </head>
 <body class='default'>
     <script type="text/javascript">
-    var url = "<?php echo $url?>";
     $(document).ready(function () {
         showDataBtc();
         showDataIdr();
