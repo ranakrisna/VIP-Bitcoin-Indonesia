@@ -156,7 +156,7 @@
             $('td small').each(function() {
                 $(this).replaceWith($(this).text());
             });
-            $("table tbody").css("font-size", "12px");
+            $("table tbody").css("font-size", "12px"); 
         };
         setInterval(function(){ 
             getData($("#market").val());
